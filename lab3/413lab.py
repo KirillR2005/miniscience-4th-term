@@ -1,5 +1,7 @@
 # The modules that will be used are imported:
 
+#This code computes the heat equation solution with initial temperature distribution T = T_0/(1 + (r - r_0)^2)
+
 import importlib.util
 
 if importlib.util.find_spec("petsc4py") is not None:
@@ -47,20 +49,6 @@ u_n.interpolate(initial_condition)
 fdim = msh.topology.dim - 1
 boundary_facets = mesh.locate_entities_boundary(msh, fdim, lambda x: np.full(x.shape[1], True, dtype=bool))
 bc = fem.dirichletbc(PETSc.ScalarType(0), fem.locate_dofs_topological(V, fdim, boundary_facets), V)
-
-# The second argument to {py:func}`functionspace
-# <dolfinx.fem.functionspace>` is a tuple `(family, degree)`, where
-# `family` is the finite element family, and `degree` specifies the
-# polynomial degree. In this case `V` is a space of continuous Lagrange
-# finite elements of degree 1.
-#
-# To apply the Dirichlet boundary conditions, we find the mesh facets
-# (entities of topological co-dimension 1) that lie on the boundary
-# $\Gamma_D$ using {py:func}`locate_entities_boundary
-# <dolfinx.mesh.locate_entities_boundary>`. The function is provided
-# with a 'marker' function that returns `True` for points `x` on the
-# boundary and `False` otherwise.
-
 
 #xdmf file for visualization
 xdmf = io.XDMFFile(msh.comm, "result/heat_diffusion4.xdmf", "w")
